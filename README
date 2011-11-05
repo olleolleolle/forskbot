@@ -1,0 +1,8 @@
+IIrcConnection		-	Main irc connectionc lass used for establishing and maintaining an irc connection
+
+
+IIrcProtocolHandler	-	A low-level protocol stream handler
+
+IIrcMessageHandler	-	A high-level channel or private message based handler.
+						This is for handling bot commands such as !cmd do something 
+						Register these with the lower level (IIrcProtocolHandler) IncomingMessageHandler
