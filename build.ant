@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="forskbot" basedir="." default="dist">
+
+	<property name="loc.src" location="src" />
+	<property name="loc.tst" location="tst" />
+	<property name="loc.target" location="target" />
+	<property name="loc.target.test" location="target/test" />
+	<property name="loc.target.dist" location="target/dist" />
+	<property name="prop.suitename" value="forskbot.AllTests" />
+
+	<target name="clean" description="Clean project">
+		<delete dir="${loc.target}" />
+		<mkdir dir="${loc.target.test}" />
+		<mkdir dir="${loc.target.dist}" />
+	</target>
+
+	<path id="path.all">
+		<fileset dir="${basedir}/libs">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${loc.target.dist}" />
+		<pathelement location="${loc.target.test}" />
+	</path>
+
+	<target name="compile" depends="clean">
+		<echo message="${toString:path.all}" />
+		<javac srcdir="${loc.src}" classpathref="path.all" destdir="${loc.target.dist}" nowarn="true" debug="true" includeantruntime="false" source="1.5" target="1.5" />
+		<javac srcdir="${loc.tst}" classpathref="path.all" destdir="${loc.target.test}" nowarn="true" debug="true" includeantruntime="false" source="1.5" target="1.5" />
+	</target>
+
+	<target name="test" depends="compile" description="Unit test">
+		<junit filtertrace="true" fork="true" newenvironment="true" haltonerror="true" haltonfailure="true" maxmemory="64m" printsummary="true" showoutput="true">
+			<classpath>
+				<path refid="path.all" />
+			</classpath>
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="yes">
+				<fileset dir="${loc.target.test}">
+					<include name="**/Test*.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<target name="dist" depends="test" description="Create executable jar distribution">
+		<jar 	destfile="${loc.target}/forskbot.jar"
+				basedir="${loc.target.dist}"
+				
+		>
+			<archives>
+				<zips>
+					<fileset dir="libs" includes="**/*.jar" />
+				</zips>
+			</archives>
+			<manifest>
+				<attribute name="Main-Class" value="forskbot.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+</project>
